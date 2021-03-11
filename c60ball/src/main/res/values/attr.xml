@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="C60View">
+        <attr name="c60BackgroundColor" format="color" />
+    </declare-styleable>
+</resources>
