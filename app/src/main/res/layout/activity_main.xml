@@ -7,9 +7,9 @@
     tools:context=".MainActivity">
 
     <com.vacax.c60ball.C60View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:c60BackgroundColor="#f0060f"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:c60BackgroundColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

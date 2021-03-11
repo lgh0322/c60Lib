@@ -115,6 +115,7 @@ class CubeRenderer : GLSurfaceView.Renderer {
      */
     private var indices = ShortArray(20 * 4 * 3 + 12 * 3 * 3)
 
+    var a:Float=0f
     var r: Float = 0f
     var g: Float = 0f
     var b: Float = 0f
@@ -308,7 +309,8 @@ class CubeRenderer : GLSurfaceView.Renderer {
         45
     )
 
-    fun setBackground(r: Float, g: Float, b: Float) {
+    fun setBackground(a:Float,r: Float, g: Float, b: Float) {
+        this.a=a
         this.r = r
         this.g = g
         this.b = b
@@ -317,7 +319,7 @@ class CubeRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
 
         //设置背景颜色
-        GLES30.glClearColor(r, g, b, 1.0f)
+        GLES30.glClearColor(r, g, b, 0.2f)
         //编译
         val vertexShaderId = compileVertexShader(readResource(R.raw.vertex_c60_shader))
         val fragmentShaderId = compileFragmentShader(readResource(R.raw.fragment_c60_shader))
@@ -353,12 +355,12 @@ class CubeRenderer : GLSurfaceView.Renderer {
         val ratio: Float = width.toFloat() / height.toFloat()
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 1f, 7f)
+        Matrix.frustumM(projectionMatrix, 0, -ratio/10, ratio/10, -0.10f, 0.10f, 1f, 100f)
     }
 
     override fun onDrawFrame(gl: GL10) {
         val scratch = FloatArray(16)
-        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
+        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, -30f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
@@ -392,9 +394,7 @@ class CubeRenderer : GLSurfaceView.Renderer {
     }
 
     init {
-        for (k in vertexPoints.indices) {
-            vertexPoints[k] = vertexPoints[k] / 2f
-        }
+
 
         for (k in 0 until 60) {
             colors[k * 4] = Random.nextFloat()

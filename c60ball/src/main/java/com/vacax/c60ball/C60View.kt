@@ -94,10 +94,11 @@ class C60View : GLSurfaceView {
         val ta = context.obtainStyledAttributes(attributeSet, R.styleable.C60View)
         val color = ta.getColor(R.styleable.C60View_c60BackgroundColor, Color.BLACK)
 
+        val a = color.toUInt().and(0xff.toUInt().shl(24)).shr(24).toFloat() / 255f
         val r = color.toUInt().and(0xff.toUInt().shl(16)).shr(16).toFloat() / 255f
         val g = color.toUInt().and(0xff.toUInt().shl(8)).shr(8).toFloat() / 255f
         val b = color.toUInt().and(0xff.toUInt().shl(0)).shr(0).toFloat() / 255f
-        renderer.setBackground(r, g, b)
+        renderer.setBackground(a,r, g, b)
 
 
 
