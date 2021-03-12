@@ -319,7 +319,7 @@ class CubeRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
 
         //设置背景颜色
-        GLES30.glClearColor(r, g, b, 0.2f)
+        GLES30.glClearColor(r, g, b, 1.0f)
         //编译
         val vertexShaderId = compileVertexShader(readResource(R.raw.vertex_c60_shader))
         val fragmentShaderId = compileFragmentShader(readResource(R.raw.fragment_c60_shader))
@@ -355,12 +355,12 @@ class CubeRenderer : GLSurfaceView.Renderer {
         val ratio: Float = width.toFloat() / height.toFloat()
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio/10, ratio/10, -0.10f, 0.10f, 1f, 100f)
+        Matrix.frustumM(projectionMatrix, 0, -ratio/2, ratio/2, -0.50f, 0.5f, 1f, 100f)
     }
 
     override fun onDrawFrame(gl: GL10) {
         val scratch = FloatArray(16)
-        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, -30f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
+        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, -6f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0)

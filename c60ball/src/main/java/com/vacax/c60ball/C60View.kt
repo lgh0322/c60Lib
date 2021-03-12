@@ -10,6 +10,8 @@ import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.util.Half
+import android.view.MotionEvent
+import android.view.View
 import com.vaca.c60.renderer.CubeRenderer
 import kotlin.math.cos
 import kotlin.math.sin
@@ -19,7 +21,7 @@ class C60View : GLSurfaceView {
     private val NS2S = 1.0f / 1000000000.0f
     private val deltaRotationVector = FloatArray(4) { 0f }
     private var timestamp: Float = 0f
-    val sensorListener = object : SensorEventListener {
+    private val sensorListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
             // This timestep's delta rotation to be multiplied by the current rotation
             // after computing it from the gyro sample data.
@@ -29,9 +31,12 @@ class C60View : GLSurfaceView {
                 var axisX: Float = event.values[0]
                 var axisY: Float = event.values[1]
                 var axisZ: Float = event.values[2]
-                renderer.angleX = (axisY)
-                renderer.angleY = (axisX)
-                renderer.angleZ = (axisZ)
+                if (!lock){
+                    renderer.angleX = (-axisY)
+                    renderer.angleY = (-axisX)
+                    renderer.angleZ = (axisZ)
+                }
+
                 // Calculate the angular speed of the sample
                 val omegaMagnitude: Float = sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ)
 
@@ -68,12 +73,40 @@ class C60View : GLSurfaceView {
         }
 
     }
+    private var lock=false
+    private var previousX: Float = 0f
+    private var previousY: Float = 0f
+
+    val touchBall = View.OnTouchListener { _, event ->
+        val x = event!!.x
+        val y = event.y
+        when (event.action) {
+            MotionEvent.ACTION_DOWN->{
+                lock=true
+            }
+            MotionEvent.ACTION_UP->{
+                lock=false
+                performClick()
+            }
+            MotionEvent.ACTION_MOVE -> {
+                var dx = x - previousX
+                var dy = y - previousY
+                renderer.angleX = (dx / 5)
+                renderer.angleY = (dy / 5)
+            }
+
+        }
+        previousX = x
+        previousY = y
+        true
+    }
 
     private val renderer = CubeRenderer()
 
     init {
         setEGLContextClientVersion(3)
         setRenderer(renderer)
+        setOnTouchListener(touchBall)
         renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
     }
 
